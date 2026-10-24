@@ -13,8 +13,8 @@ import {StatusBadgeComponent} from '../../shared/status-badge.component';
    placeholder="Name or area" (input)="q.set($any($event.target).value)">
   <ul class="space-y-3">
    @for (r of filtered(); track r.w.id) {
-    <li><button type="button" class="card block w-full text-left" [class]="r.w.id===selected()?.w.id?'border-2 !border-forest':''"
-      [class.!border-urgent]="r.risk==='urgent'" [attr.aria-pressed]="r.w.id===selected()?.w.id" (click)="sel.set(r.w.id)">
+    <li><button type="button" class="card block w-full text-left" [class]="r.w.id===selectedId()?'border-2 !border-forest':''"
+      [class.!border-urgent]="r.risk==='urgent'" [attr.aria-pressed]="r.w.id===selectedId()" (click)="sel.set(r.w.id)">
       <span class="flex items-start justify-between gap-2"><span class="font-bold">{{r.w.name}}</span><app-status-badge [risk]="r.risk"/></span>
       <span class="block text-sm">{{r.w.area}} · delivered {{r.w.deliveredAt | date:'d MMM'}}</span>
       @if (r.missed) {<span class="block text-sm font-medium">{{r.missed}} missed check-in{{r.missed>1?'s':''}}</span>}
@@ -47,7 +47,8 @@ export class ClinicComponent{
  svc=inject(TelemamaService); signs=SIGNS;
  q=signal(''); sel=signal<string|null>(null);
  filtered=computed(()=>{const q=this.q().trim().toLowerCase();return this.svc.rows().filter(r=>!q||(r.w.name+' '+r.w.area).toLowerCase().includes(q));});
- selected=computed(()=>this.svc.rows().find(r=>r.w.id===this.sel())??this.svc.rows()[0]);
+ selectedId=computed(()=>this.sel()??this.svc.rows()[0]?.w.id);
+ selected=computed(()=>this.svc.rows().find(r=>r.w.id===this.selectedId()));
  constructor(){effect(()=>{const a=this.svc.activeAlert();if(a)untracked(()=>this.sel.set(a.womanId));});}
  icon:Record<StepStatus,string>={done:'✓',danger:'▲',missed:'✕',due:'●',upcoming:'○'};
  text:Record<StepStatus,string>={done:'Checked in',danger:'Danger sign reported',missed:'Missed',due:'Due now',upcoming:'Upcoming'};
