@@ -1,0 +1,7 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+body{@apply bg-cream text-forest font-sans antialiased}
+:focus-visible{outline:3px solid #2F3A33;outline-offset:2px}
+.card{@apply rounded-2xl bg-white border border-forest/10 p-5}
+.btn{@apply inline-flex min-h-12 items-center justify-center rounded-2xl px-5 font-medium text-center}
+.btn-primary{@apply bg-terracotta-dark text-white}
+.btn-ghost{@apply bg-white border-2 border-forest text-forest}
